@@ -1,2 +1,2 @@
 # To-DoApp
-To-Do App in Kotlin
+To-Do app in Kotlin with RoomDatabase, Navigation Component, LiveData, ViewModel, Data Binding and more.
