@@ -12,13 +12,14 @@ import com.example.todoapp.data.models.Priority
 import com.example.todoapp.data.models.ToDoData
 import com.example.todoapp.data.viewmodel.ToDoViewModel
 import com.example.todoapp.databinding.FragmentAddBinding
-import com.example.todoapp.databinding.FragmentListBinding
+import com.example.todoapp.fragments.SharedViewModel
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
     private val toDoViewModel: ToDoViewModel by viewModels<ToDoViewModel>()
+    private val sharedViewModel: SharedViewModel by viewModels<SharedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,12 +48,12 @@ class AddFragment : Fragment() {
         val priority = binding.spinnerPriorities.selectedItem.toString()
         val description = binding.editTextDescription.text.toString()
 
-        val validation = verifyDataFromUser(title, description)
+        val validation = sharedViewModel.verifyDataFromUser(title, description)
         if (validation) {
             val newData = ToDoData(
                 0,
                 title,
-                parsePriorty(priority),
+                sharedViewModel.parsePriority(priority),
                 description
             )
             toDoViewModel.insertData(newData)
@@ -60,31 +61,9 @@ class AddFragment : Fragment() {
 
             //Navigate back
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
-        }else{
-            Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun verifyDataFromUser(title: String, description: String): Boolean {
-        return if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) {
-            false
-        } else !(title.isEmpty() || description.isEmpty())
-    }
-
-    private fun parsePriorty(priority: String): Priority {
-        return when (priority) {
-            "High Priority" -> {
-                Priority.HIGH
-            }
-            "Medium Priority" -> {
-                Priority.MEDIUM
-            }
-            "Low Priority" -> {
-                Priority.LOW
-            }
-            else -> {
-                Priority.LOW
-            }
+        } else {
+            Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_LONG)
+                .show()
         }
     }
 }
