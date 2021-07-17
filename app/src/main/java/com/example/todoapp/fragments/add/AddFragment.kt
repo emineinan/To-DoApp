@@ -28,6 +28,7 @@ class AddFragment : Fragment() {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
 
         setHasOptionsMenu(true)
+        binding.spinnerPriorities.onItemSelectedListener = sharedViewModel.listener
 
         return binding.root
     }
