@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.data.models.Priority
@@ -30,6 +31,10 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         val currentItem = dataList[position]
         holder.binding.textViewTitle.text = currentItem.title
         holder.binding.textViewDescription.text = currentItem.description
+        holder.binding.rowBackground.setOnClickListener {
+            val action=ListFragmentDirections.actionListFragmentToUpdateFragment(currentItem)
+            holder.binding.root.findNavController().navigate(action)
+        }
 
         val priority = currentItem.priority
         when (priority) {
