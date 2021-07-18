@@ -1,7 +1,9 @@
 package com.example.todoapp.fragments.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -26,11 +28,11 @@ class ListFragment : Fragment() {
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
         //Set Adapter
-        val recyclerView=binding.recyclerView
-        recyclerView.adapter=adapter
-        recyclerView.layoutManager=LinearLayoutManager(requireActivity())
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        toDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data->
+        toDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->
             adapter.setData(data)
         })
 
@@ -45,5 +47,28 @@ class ListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_delete_all) {
+            deleteAllData()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteAllData() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _, _ ->
+            toDoViewModel.deleteAllData()
+            Toast.makeText(
+                requireContext(),
+                "Successfully deleted everything!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Delete Everything?")
+        builder.setMessage("Are you sure you want to delete everything?")
+        builder.create().show()
     }
 }
