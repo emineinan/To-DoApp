@@ -1,5 +1,6 @@
 package com.example.todoapp.fragments.update
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -45,8 +46,13 @@ class UpdateFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_save) {
-            updateData()
+        when (item.itemId) {
+            R.id.menu_save -> {
+                updateData()
+            }
+            R.id.menu_delete -> {
+                deleteData()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -65,10 +71,28 @@ class UpdateFragment : Fragment() {
                 description
             )
             toDoViewModel.updateData(updatedData)
-            Toast.makeText(requireContext(),"Successfully updated!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Successfully updated!", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
-        }else{
-            Toast.makeText(requireContext(),"Please fill out all fields.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT)
+                .show()
         }
+    }
+
+    private fun deleteData() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _, _ ->
+            toDoViewModel.deleteData(args.currentItem)
+            Toast.makeText(
+                requireContext(),
+                "Successfully deleted: ${args.currentItem.title}",
+                Toast.LENGTH_SHORT
+            ).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Delete ${args.currentItem.title}?")
+        builder.setMessage("Are you sure you want to delete ${args.currentItem.title}?")
+        builder.create().show()
     }
 }
