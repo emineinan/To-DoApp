@@ -29,13 +29,14 @@ class UpdateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        // Data binding
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
+        binding.args = args
 
+        // Set menu
         setHasOptionsMenu(true)
-        binding.editTextCurrentTitle.setText(args.currentItem.title)
-        binding.spinnerCurrentPriorities.setSelection(sharedViewModel.parsePriorityInt(args.currentItem.priority))
-        binding.editTextCurrentDescription.setText(args.currentItem.description)
+
+        // Spinner item selected listener
         binding.spinnerCurrentPriorities.onItemSelectedListener = sharedViewModel.listener
 
         return binding.root
@@ -94,5 +95,10 @@ class UpdateFragment : Fragment() {
         builder.setTitle("Delete ${args.currentItem.title}?")
         builder.setMessage("Are you sure you want to delete ${args.currentItem.title}?")
         builder.create().show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
