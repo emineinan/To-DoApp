@@ -26,40 +26,34 @@ class ListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        // Data binding
         _binding = FragmentListBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
 
-        //Set Adapter
-        val recyclerView = binding.recyclerView
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        //Setup recyclerview
+        setUpRecyclerView()
 
+        //Observe LiveData
         toDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->
             sharedViewModel.checkIfDatabaseEmpty(data)
             adapter.setData(data)
-        })
-
-        sharedViewModel.emptyDatabase.observe(viewLifecycleOwner, {
-            showEmptyDatabaseViews(it)
         })
 
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_listFragment_to_addFragment)
         }
 
+        //Set menu
         setHasOptionsMenu(true)
 
         return binding.root
     }
 
-    private fun showEmptyDatabaseViews(emptyDatabase: Boolean) {
-        if (emptyDatabase) {
-            binding.imageViewNoData.visibility = View.VISIBLE
-            binding.textViewNoData.visibility = View.VISIBLE
-        }else{
-            binding.imageViewNoData.visibility = View.INVISIBLE
-            binding.textViewNoData.visibility = View.INVISIBLE
-        }
+    private fun setUpRecyclerView() {
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -87,5 +81,10 @@ class ListFragment : Fragment() {
         builder.setTitle("Delete Everything?")
         builder.setMessage("Are you sure you want to delete everything?")
         builder.create().show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
