@@ -13,6 +13,7 @@ import com.example.todoapp.R
 import com.example.todoapp.data.viewmodel.ToDoViewModel
 import com.example.todoapp.databinding.FragmentListBinding
 import com.example.todoapp.fragments.SharedViewModel
+import com.example.todoapp.fragments.list.adapter.ListAdapter
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
