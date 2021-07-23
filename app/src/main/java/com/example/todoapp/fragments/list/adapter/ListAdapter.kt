@@ -7,7 +7,7 @@ import com.example.todoapp.data.models.ToDoData
 import com.example.todoapp.databinding.RowItemBinding
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
-    private var dataList = emptyList<ToDoData>()
+    var dataList = emptyList<ToDoData>()
 
     class MyViewHolder(val binding: RowItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(toDoData: ToDoData) {
